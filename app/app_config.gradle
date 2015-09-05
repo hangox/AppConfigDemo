@@ -1,0 +1,28 @@
+
+android.applicationVariants.all { variant ->
+    //获取当前变种名字
+    String variantName = variant.name;
+    //装换第一个字母为大写
+    variantName = "${variantName.substring(0, 1).toUpperCase()}" +
+            "${variantName.substring(1, variantName.length())}"
+    //获取assets目录的位置
+    def intoPath
+    android.sourceSets.main.assets.each{ value ->
+        intoPath = value.source.get(0)
+    }
+    //获取mergeAssets任务
+    project.getTasksByName("merge${variantName}Assets", false).each {
+        //创建拷贝任务,把configDebug or configRelease 中的文件拷贝到assets中
+        Task myTask = project.tasks.create(
+                name: "configApp${variantName}", type: Copy, overwrite: true) {
+            group = 'build'//分配在build 分组中
+            from("src/config${variantName}") {
+                include '*.json'//只是拷贝json文件，不需要可以去掉
+            }
+            into intoPath
+        }
+        //使mergeAssets 依赖于这个拷贝任务，这样当megeAssets 执行的时候就会先调用myTask
+        it.dependsOn myTask
+    }
+
+}

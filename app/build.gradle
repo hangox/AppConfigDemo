@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
+    defaultConfig {
+        applicationId "com.hangox.appconfigtest"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        common {
+            storeFile file('/Users/hangox/Documents/key/haogxdekey.jks')
+            storePassword 'yourpassword'
+            keyAlias 'youralias'
+            keyPassword 'yourpassword'
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.common;
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.common;
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+    }
+    productFlavors {
+    }
+}
+
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.google.code.gson:gson:2.3'
+}
+
+apply from : 'app_config.gradle'
